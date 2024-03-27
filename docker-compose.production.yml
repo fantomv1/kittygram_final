@@ -22,8 +22,8 @@ services:
       - db
   
   frontend:
-    env_file: .env
     image: fantomv1/kittygram_frontend
+    env_file: .env
     command: cp -r /app/build/. /static/
     volumes:
       - static:/static
