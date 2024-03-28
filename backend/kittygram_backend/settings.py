@@ -2,13 +2,24 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+from django.core.management.utils import get_random_secret_key
+
+
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-cg6*%6d51ef8f#4!r3*$vmxm4)abgjw8mo!4y-q*uq1!4$-89$'
+def get_secret_key():
+    if os.getenv("SETTINGS_SECRET_KEY") is not None:
+        return os.getenv("SETTINGS_SECRET_KEY")
+    return get_random_secret_key()
 
-DEBUG = True
+SECRET_KEY = get_secret_key()
 
-ALLOWED_HOSTS = []
+DEBUG = os.getenv("SETTINGS_DEBUG").lower() == "true"
+
+ALLOWED_HOSTS = os.getenv("SETTINGS_ALLOWED_HOSTS").split()
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -54,7 +65,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'kittygram_backend.wsgi.application'
 
 
-DATABASES = {
+DATABASES_POSTGRESQL = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('POSTGRES_DB', 'django'),
@@ -65,6 +76,19 @@ DATABASES = {
     }
 }
 
+DATABASES_SQLITE = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+def get_databases():
+    if os.getenv("SETTINGS_DATABASES_SQLITE").lower() == "true":
+        return DATABASES_SQLITE
+    return DATABASES_POSTGRESQL
+
+DATABASES = get_databases()
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
