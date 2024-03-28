@@ -17,9 +17,19 @@ def get_secret_key():
 
 SECRET_KEY = get_secret_key()
 
-DEBUG = os.getenv("SETTINGS_DEBUG").lower() == "true"
+def get_debug_bool():
+    if os.getenv("SETTINGS_DEBUG") is not None:
+        return os.getenv("SETTINGS_DEBUG").lower() == "true"
+    return True
 
-ALLOWED_HOSTS = os.getenv("SETTINGS_ALLOWED_HOSTS").split()
+DEBUG = get_debug_bool()
+
+def get_allowed_host():
+    if os.getenv("SETTINGS_ALLOWED_HOSTS") is not None:
+        return os.getenv("SETTINGS_ALLOWED_HOSTS").split()
+    return []
+
+ALLOWED_HOSTS = get_allowed_host()
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -84,7 +94,8 @@ DATABASES_SQLITE = {
 }
 
 def get_databases():
-    if os.getenv("SETTINGS_DATABASES_SQLITE").lower() == "true":
+    if (os.getenv("SETTINGS_DATABASES_SQLITE") is not None
+        and os.getenv("SETTINGS_DATABASES_SQLITE").lower() == "true"):
         return DATABASES_SQLITE
     return DATABASES_POSTGRESQL
 
