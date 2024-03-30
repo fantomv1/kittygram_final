@@ -97,7 +97,7 @@ HOST - IP адрес сервера.
 
 SSH_KEY - Закрытый ключ SSH для доступа к серверу.
 
-SSH_PASSPHASE - кодовая фраза ключа SSH.
+SSH_PASSPHRASE - кодовая фраза ключа SSH.
 
 DOCKER_USERNAME - логин на DockerHub.
 
